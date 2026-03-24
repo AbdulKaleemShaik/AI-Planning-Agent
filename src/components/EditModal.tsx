@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles, Wand2, MessageSquare } from 'lucide-react';
+import { X, Sparkles, Wand2, MessageSquare, ArrowRight, Zap } from 'lucide-react';
 
 interface EditModalProps {
   sectionTitle: string;
@@ -12,19 +12,16 @@ interface EditModalProps {
 }
 
 const PRESETS = [
-  { label: 'Make more detailed', instruction: 'Make this section more detailed with deeper analysis and specific examples', icon: '📝' },
-  { label: 'Professional tone', instruction: 'Rewrite this in a more professional, consultancy-grade tone', icon: '💼' },
-  { label: 'Shorten', instruction: 'Shorten this section while keeping the key points', icon: '✂️' },
-  { label: 'Add metrics', instruction: 'Add specific KPIs, metrics, and success criteria to this section', icon: '📊' },
-  { label: 'Add examples', instruction: 'Add real-world examples and case studies to support the points', icon: '💡' },
-  { label: 'Simplify', instruction: 'Simplify the language to make it more accessible and easier to understand', icon: '🎯' },
+  { label: 'Deep Dive', instruction: 'Make this section more detailed with deeper analysis and specific examples', icon: <Zap size={16} /> },
+  { label: 'Executive Tone', instruction: 'Rewrite this in a strictly professional, consultancy-grade tone', icon: <Wand2 size={16} /> },
+  { label: 'Concise', instruction: 'Shorten this section to the most impactful points', icon: <MessageSquare size={16} /> },
 ];
 
 export default function EditModal({ sectionTitle, onEdit, onClose, isLoading }: EditModalProps) {
   const [customInstruction, setCustomInstruction] = useState('');
 
   const handleSubmit = () => {
-    if (customInstruction.trim()) {
+    if (customInstruction.trim() && !isLoading) {
       onEdit(customInstruction.trim());
     }
   };
@@ -34,176 +31,187 @@ export default function EditModal({ sectionTitle, onEdit, onClose, isLoading }: 
       <motion.div
         className="modal-backdrop"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        animate={{ opacity: 1, backdropFilter: 'blur(12px)' }}
+        exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
         onClick={onClose}
       >
         <motion.div
           className="glass-card"
-          initial={{ scale: 0.9, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          initial={{ scale: 0.95, opacity: 0, y: 30, rotateX: 10 }}
+          animate={{ scale: 1, opacity: 1, y: 0, rotateX: 0 }}
+          exit={{ scale: 0.95, opacity: 0, y: 30, rotateX: -10 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
           style={{
             width: '100%',
-            maxWidth: '520px',
-            padding: '28px',
+            maxWidth: '560px',
+            padding: '32px',
+            background: 'rgba(10, 15, 30, 0.85)',
+            border: '1px solid rgba(99, 102, 241, 0.3)',
+            boxShadow: '0 24px 80px rgba(0,0,0,0.6), 0 0 40px rgba(99, 102, 241, 0.15) inset'
           }}
         >
           {/* Header */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              marginBottom: '24px',
-            }}
-          >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <Wand2 size={18} color="var(--accent-indigo)" />
-                <h3 style={{ fontSize: '16px', fontWeight: 700 }}>AI Edit</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                style={{
+                  width: '52px', height: '52px', borderRadius: '16px',
+                  background: 'var(--gradient-primary)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 0 24px rgba(99, 102, 241, 0.5)'
+                }}
+              >
+                <Sparkles size={26} color="white" />
+              </motion.div>
+              <div>
+                <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.5px', marginBottom: '4px' }}>AI Assistant</h3>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                  Refining: <span style={{ color: 'var(--accent-violet)', fontWeight: 600 }}>{sectionTitle}</span>
+                </p>
               </div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-                Editing: <strong style={{ color: 'var(--text-secondary)' }}>{sectionTitle}</strong>
-              </p>
             </div>
-            <button
-              onClick={onClose}
-              className="btn-ghost"
-              style={{ padding: '6px' }}
-            >
-              <X size={18} />
+            <button onClick={onClose} className="btn-ghost" style={{ padding: '8px', borderRadius: '50%' }}>
+              <X size={20} />
             </button>
           </div>
 
           {/* Presets */}
-          <div style={{ marginBottom: '20px' }}>
-            <p
-              style={{
-                fontSize: '11px',
-                fontWeight: 600,
-                color: 'var(--text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                marginBottom: '10px',
-              }}
-            >
-              Quick Actions
+          <div style={{ marginBottom: '32px' }}>
+            <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '16px' }}>
+              Quick Refinements
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {PRESETS.map((preset, i) => (
                 <motion.button
                   key={i}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, backgroundColor: 'rgba(99, 102, 241, 0.15)', borderColor: 'rgba(99, 102, 241, 0.4)' }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => onEdit(preset.instruction)}
                   disabled={isLoading}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 14px',
-                    background: 'rgba(99, 102, 241, 0.06)',
-                    border: '1px solid rgba(99, 102, 241, 0.12)',
-                    borderRadius: '10px',
-                    color: 'var(--text-secondary)',
-                    fontSize: '12px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    fontFamily: 'inherit',
-                    textAlign: 'left',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '16px 20px',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '14px',
+                    color: 'var(--text-primary)',
+                    fontSize: '14px', fontWeight: 600,
+                    cursor: isLoading ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(99, 102, 241, 0.12)';
-                    e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.25)';
-                    e.currentTarget.style.color = 'var(--text-primary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(99, 102, 241, 0.06)';
-                    e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.12)';
-                    e.currentTarget.style.color = 'var(--text-secondary)';
+                    opacity: isLoading ? 0.5 : 1
                   }}
                 >
-                  <span>{preset.icon}</span>
-                  {preset.label}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <span style={{ color: 'var(--primary)' }}>{preset.icon}</span>
+                    {preset.label}
+                  </div>
+                  <ArrowRight size={16} color="var(--text-muted)" />
                 </motion.button>
               ))}
             </div>
           </div>
 
-          {/* Custom instruction */}
+          {/* Custom Instruction */}
           <div>
-            <p
-              style={{
-                fontSize: '11px',
-                fontWeight: 600,
-                color: 'var(--text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                marginBottom: '10px',
-              }}
-            >
-              Custom Instruction
+            <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '16px' }}>
+              Custom Prompt
             </p>
-            <div
-              style={{
-                display: 'flex',
-                gap: '8px',
-              }}
-            >
-              <div style={{ flex: 1, position: 'relative' }}>
-                <MessageSquare
-                  size={14}
-                  color="var(--text-muted)"
-                  style={{ position: 'absolute', left: '14px', top: '13px' }}
-                />
-                <input
-                  type="text"
-                  value={customInstruction}
-                  onChange={(e) => setCustomInstruction(e.target.value)}
-                  placeholder="e.g., Add a competitive analysis angle..."
-                  onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-                  disabled={isLoading}
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px 10px 36px',
-                    background: 'rgba(10, 10, 26, 0.6)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '10px',
-                    color: 'var(--text-primary)',
-                    fontSize: '13px',
-                    fontFamily: 'inherit',
-                    transition: 'all 0.2s',
-                  }}
-                />
+            <div style={{ position: 'relative' }}>
+              <textarea
+                value={customInstruction}
+                onChange={(e) => setCustomInstruction(e.target.value)}
+                placeholder="Ask the AI to rewrite, expand, or adjust this section..."
+                disabled={isLoading}
+                rows={3}
+                style={{
+                  width: '100%',
+                  padding: '16px 16px 60px 16px',
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '16px',
+                  color: 'var(--text-primary)',
+                  fontSize: '15px',
+                  fontFamily: 'inherit',
+                  resize: 'none',
+                  outline: 'none',
+                  transition: 'all 0.3s',
+                  boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.3)'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'var(--primary)';
+                  e.target.style.boxShadow = 'inset 0 4px 20px rgba(0,0,0,0.3), 0 0 0 1px var(--primary)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.target.style.boxShadow = 'inset 0 4px 20px rgba(0,0,0,0.3)';
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit();
+                  }
+                }}
+              />
+              <div style={{ position: 'absolute', bottom: '14px', right: '14px' }}>
+                <button
+                  onClick={handleSubmit}
+                  className="btn-primary"
+                  disabled={isLoading || !customInstruction.trim()}
+                  style={{ padding: '10px 20px', borderRadius: '12px' }}
+                >
+                  {isLoading ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                      style={{ width: '18px', height: '18px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}
+                    />
+                  ) : (
+                    <>
+                      <Sparkles size={16} />
+                      <span style={{ fontSize: '14px' }}>Generate</span>
+                    </>
+                  )}
+                </button>
               </div>
-              <button
-                onClick={handleSubmit}
-                className="btn-primary"
-                disabled={isLoading || !customInstruction.trim()}
-                style={{ padding: '10px 18px', whiteSpace: 'nowrap' }}
-              >
-                {isLoading ? (
-                  <div
-                    className="animate-spin"
-                    style={{
-                      width: '14px',
-                      height: '14px',
-                      border: '2px solid rgba(255,255,255,0.3)',
-                      borderTopColor: 'white',
-                      borderRadius: '50%',
-                    }}
-                  />
-                ) : (
-                  <Sparkles size={14} />
-                )}
-                Apply
-              </button>
             </div>
           </div>
+
+          {/* Loading Overlay */}
+          <AnimatePresence>
+            {isLoading && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{
+                  marginTop: '24px',
+                  padding: '16px',
+                  background: 'rgba(99, 102, 241, 0.1)',
+                  border: '1px solid rgba(99, 102, 241, 0.3)',
+                  borderRadius: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '12px'
+                }}
+              >
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ y: [0, -8, 0] }}
+                      transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                      style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 10px var(--primary)' }}
+                    />
+                  ))}
+                </div>
+                <span style={{ fontSize: '14px', color: 'var(--primary)', fontWeight: 600, letterSpacing: '0.5px' }}>Applying AI modifications...</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </motion.div>
     </AnimatePresence>

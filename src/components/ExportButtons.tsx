@@ -53,50 +53,25 @@ export default function ExportButtons({ report }: ExportButtonsProps) {
 
       const { html } = await res.json();
 
-      // Create a hidden container for PDF rendering
-      const container = document.createElement('div');
-      container.innerHTML = html;
-      container.style.position = 'absolute';
-      container.style.left = '-9999px';
-      container.style.top = '0';
-      container.style.width = '800px';
-      container.style.background = 'white';
-      document.body.appendChild(container);
+      const html2pdf = (await import('html2pdf.js')).default;
 
-      // Dynamically import to avoid SSR issues
-      const html2canvas = (await import('html2canvas')).default;
-      const { jsPDF } = await import('jspdf');
+      // Wrap html to enforce predictable container dimensions avoiding inherited CSS bugs
+      const pdfHtml = `
+        <div style="width: 800px; background: white; padding: 20px;">
+          ${html}
+        </div>
+      `;
 
-      const canvas = await html2canvas(container, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-      });
+      const opt = {
+        margin:       [20, 20, 20, 20],
+        filename:     `PlanForce-Report-${Date.now()}.pdf`,
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: 840 },
+        pagebreak:    { mode: ['css', 'avoid-all', 'legacy'] },
+        jsPDF:        { unit: 'pt', format: 'a4', orientation: 'portrait' }
+      };
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save(`PlanForce-Report-${Date.now()}.pdf`);
-
-      document.body.removeChild(container);
+      await html2pdf().set(opt).from(pdfHtml).save();
     } catch (error) {
       console.error('PDF export failed:', error);
     } finally {

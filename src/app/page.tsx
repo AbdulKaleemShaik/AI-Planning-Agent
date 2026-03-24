@@ -5,7 +5,7 @@ import { useReportStore } from '@/store/report-store';
 import InputForm from '@/components/InputForm';
 import ReportView from '@/components/ReportView';
 import ReasoningSteps from '@/components/ReasoningSteps';
-import { Zap, Github } from 'lucide-react';
+import { Zap, Code } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
@@ -106,6 +106,10 @@ export default function Home() {
 
   return (
     <div>
+      {/* Background Effects */}
+      <div className="bg-grid" />
+      <div className="bg-orbs" />
+
       {/* Header */}
       <header className="app-header">
         <div className="container">
@@ -143,7 +147,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="btn-ghost"
               >
-                <Github size={16} />
+                <Code size={16} />
               </a>
             </div>
           </div>
@@ -174,23 +178,40 @@ export default function Home() {
               <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                 <motion.div
                   animate={{
-                    scale: [1, 1.05, 1],
-                    opacity: [0.7, 1, 0.7],
+                    scale: [1, 1.1, 1],
+                    boxShadow: [
+                      '0 0 40px rgba(99, 102, 241, 0.3)',
+                      '0 0 80px rgba(139, 92, 246, 0.6)',
+                      '0 0 40px rgba(99, 102, 241, 0.3)',
+                    ]
                   }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                   style={{
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: '20px',
+                    position: 'relative',
+                    width: '72px',
+                    height: '72px',
+                    borderRadius: '24px',
                     background: 'var(--gradient-primary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    margin: '0 auto 20px',
-                    boxShadow: '0 0 40px rgba(99, 102, 241, 0.3)',
+                    margin: '0 auto 24px',
+                    border: '1px solid rgba(255, 255, 255, 0.2)'
                   }}
                 >
-                  <Zap size={28} color="white" />
+                  <Zap size={32} color="white" style={{ filter: 'drop-shadow(0 2px 10px rgba(255,255,255,0.5))', zIndex: 2 }} />
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                    style={{
+                      position: 'absolute',
+                      inset: -2,
+                      borderRadius: '26px',
+                      background: 'conic-gradient(from 0deg, transparent, rgba(255,255,255,0.6), transparent)',
+                      zIndex: 1,
+                      mixBlendMode: 'overlay'
+                    }}
+                  />
                 </motion.div>
                 <h2
                   style={{

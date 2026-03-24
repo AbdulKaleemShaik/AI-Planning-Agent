@@ -45,16 +45,17 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
             alignItems: 'center',
             gap: '6px',
             padding: '6px 14px',
-            background: 'rgba(99, 102, 241, 0.1)',
-            border: '1px solid rgba(99, 102, 241, 0.2)',
-            borderRadius: '20px',
-            fontSize: '12px',
-            fontWeight: 500,
-            color: '#8b5cf6',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '24px',
+            fontSize: '13px',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            backdropFilter: 'blur(12px)',
             marginBottom: '20px',
           }}
         >
-          <Zap size={12} />
+          <Zap size={14} color="var(--primary)" />
           Multi-Agent AI Planning System
         </motion.div>
 
@@ -102,14 +103,37 @@ export default function InputForm({ onSubmit, isLoading }: InputFormProps) {
           >
             Problem Statement
           </label>
-          <textarea
-            className="input-field"
-            value={problem}
-            onChange={(e) => setProblem(e.target.value)}
-            placeholder="Describe your problem or idea... e.g., 'Build a creator marketplace platform'"
-            disabled={isLoading}
-            rows={4}
-          />
+          <div style={{ position: 'relative' }}>
+            <textarea
+              value={problem}
+              onChange={(e) => setProblem(e.target.value)}
+              placeholder="Describe your problem or idea... e.g., 'Build a creator marketplace platform'"
+              disabled={isLoading}
+              rows={4}
+              style={{
+                width: '100%',
+                padding: '20px',
+                background: 'rgba(0, 0, 0, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '16px',
+                color: 'var(--text-primary)',
+                fontSize: '16px',
+                fontFamily: 'inherit',
+                resize: 'none',
+                outline: 'none',
+                transition: 'all 0.3s',
+                boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.2)'
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--primary)';
+                e.target.style.boxShadow = 'inset 0 4px 20px rgba(0,0,0,0.2), 0 0 0 1px var(--primary)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.boxShadow = 'inset 0 4px 20px rgba(0,0,0,0.2)';
+              }}
+            />
+          </div>
 
           <div
             style={{

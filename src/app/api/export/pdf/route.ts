@@ -52,10 +52,10 @@ function generatePdfHtml(report: Report): string {
       const content = markdownToHtml(section.content);
       return `
         <div style="margin-bottom: 32px; page-break-inside: avoid;">
-          <div style="border-bottom: 3px solid ${color}; padding-bottom: 8px; margin-bottom: 16px;">
-            <h2 style="color: ${color}; font-size: 22px; margin: 0; font-family: 'Segoe UI', sans-serif;">${section.title}</h2>
+          <div style="border-bottom: 2px solid ${color}; padding-bottom: 12px; margin-bottom: 20px;">
+            <h2 style="color: ${color}; font-size: 24px; margin: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; letter-spacing: -0.5px; font-weight: 700;">${section.title}</h2>
           </div>
-          <div style="font-size: 14px; line-height: 1.7; color: #1a1a2e; font-family: 'Segoe UI', sans-serif;">
+          <div style="font-size: 13.5px; line-height: 1.8; color: #334155; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding-bottom: 16px;">
             ${content}
           </div>
         </div>
@@ -80,14 +80,14 @@ function generatePdfHtml(report: Report): string {
 
 function markdownToHtml(md: string): string {
   return md
-    .replace(/### (.+)/g, '<h4 style="color: #334155; font-size: 16px; margin: 16px 0 8px 0; font-weight: 600;">$1</h4>')
-    .replace(/## (.+)/g, '<h3 style="color: #334155; font-size: 18px; margin: 20px 0 10px 0; font-weight: 600;">$1</h3>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/### (.+)/g, '<h4 style="color: #0f172a; font-size: 15px; margin: 20px 0 8px 0; font-weight: 700;">$1</h4>')
+    .replace(/## (.+)/g, '<h3 style="color: #0f172a; font-size: 17px; margin: 24px 0 12px 0; font-weight: 700;">$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color: #0f172a;">$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`(.+?)`/g, '<code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 13px;">$1</code>')
-    .replace(/^- (.+)/gm, '<li style="margin-bottom: 4px;">$1</li>')
-    .replace(/^(\d+)\. (.+)/gm, '<li style="margin-bottom: 4px;">$2</li>')
-    .replace(/(<li.*<\/li>\n?)+/g, '<ul style="margin: 8px 0; padding-left: 24px;">$&</ul>')
-    .replace(/\n\n/g, '<br/><br/>')
+    .replace(/`(.+?)`/g, '<code style="background: #f1f5f9; color: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #e2e8f0;">$1</code>')
+    .replace(/^- (.+)/gm, '<li style="margin-bottom: 8px;">$1</li>')
+    .replace(/^(\d+)\. (.+)/gm, '<li style="margin-bottom: 8px;">$2</li>')
+    .replace(/(<li.*<\/li>\n?)+/g, '<ul style="margin: 12px 0 20px 0; padding-left: 28px;">$&</ul>')
+    .replace(/\n\n/g, '<div style="height: 16px;"></div>')
     .replace(/\n/g, '<br/>');
 }
