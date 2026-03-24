@@ -63,7 +63,7 @@ export default function ExportButtons({ report }: ExportButtonsProps) {
       `;
 
       const opt = {
-        margin:       [20, 20, 20, 20],
+        margin:       [20, 20, 20, 20] as [number, number, number, number],
         filename:     `PlanForce-Report-${Date.now()}.pdf`,
         image:        { type: 'jpeg', quality: 1 },
         html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: 840 },
