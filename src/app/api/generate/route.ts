@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
             reasoning: 'Enriching analysis with deeper context and strategic insights...',
           });
 
-          const insightOutput = await runInsightAgent(plannerOutput, problemStatement);
+          const insightOutput = await runInsightAgent(plannerOutput);
 
           sendEvent('agent-complete', {
             agent: 'Insight Agent',
