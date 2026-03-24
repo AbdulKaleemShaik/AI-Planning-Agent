@@ -31,8 +31,8 @@ The platform seamlessly translates the generated AI markdown into beautiful, nat
 - **Version History**: The "Undo" system captures snapshots before every AI edit, allowing users to instantly revert a section to its previous state.
 
 ### 🎨 5. Premium UI/UX Design
-- A clean, enterprise-grade, minimalist light-mode aesthetic heavily optimized for readability.
-- Employs **Framer Motion** for smooth staggered entrance animations and interactive states.
+- A cutting-edge, premium dark mode aesthetic featuring dynamic background orbs, glassmorphic floating panels, and custom neon gradients.
+- Employs **Framer Motion** for smooth staggered entrance animations, sophisticated glowing hover states, and interactive multi-agent processing loaders.
 - Fully responsive, structured 4-section presentation (Problem Breakdown, Stakeholders, Solution Approach, Action Plan).
 
 ---
@@ -82,12 +82,37 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🏗️ Architecture Overview
 
-The system heavily relies on Next.js API Routes to secure API keys and orchestrate the heavy lifting strictly on the server:
-1. The client sends a `POST` request to `/api/generate`.
-2. The route holds a `ReadableStream` open to the client and fires sequential server-side `generateText` requests to the Groq API.
-3. The server uses highly structured system prompts, forcing `llama-3.3-70b-versatile` to format its reasoning and answers natively.
-4. Custom string interceptors parse the generated string payloads to guarantee clean hand-offs between the agents in the sequence.
-5. The final assembled JSON and parsed markup is streamed back to the Client `Zustand` store, triggering the Framer Motion UI renders.
+The platform implements a **Sequential Multi-Agent Pipeline** utilizing Next.js API routes with Server-Sent Events (SSE) to stream reasoning steps and state updates in real-time.
+
+```mermaid
+graph TD
+    UI[Frontend Client<br/>React + Tailwind + Zustand] -->|POST /api/generate| API[Next.js API Route<br/>Streaming Gateway]
+    
+    subgraph Multi-Agent Pipeline
+        API -->|Initial User Prompt| P[🧠 Planner Agent]
+        P -->|1. Problem Breakdown<br/>2. Key Components| I[💡 Insight Agent]
+        I -->|1. Deep Insights<br/>2. Strategic Pillars| E[⚙️ Execution Agent]
+        E -->|Concrete Action Plan| F[Final Aggregation]
+    end
+
+    subgraph LLM Provider
+        P -.->|llama-3.3-70b-versatile| Groq[Groq API]
+        I -.->|llama-3.3-70b-versatile| Groq
+        E -.->|llama-3.3-70b-versatile| Groq
+    end
+
+    F -->|Streams Final JSON payload via SSE| Store[Zustand Client Store]
+    Store -->|Hydrates React state| Render[Framer Motion Engine<br/>Glassmorphic UI]
+```
+
+### 🔄 Data & Execution Flow
+1. **Client Request**: The client sends a `POST` request to `/api/generate` with the initial problem statement.
+2. **SSE Stream Initialization**: The route holds a `ReadableStream` open to the client, actively emitting `agent-start` and `agent-complete` events to construct the visual "Agents Working" timeline.
+3. **Sequential Processing**: 
+   - The **Planner Agent** establishes the foundational problem dimensions via structured Groq calls.
+   - The **Insight Agent** uses the Planner's strictly typed Zod output to layer extensive market strategy and deeper insights.
+   - The **Execution Agent** synthesizes the collective knowledge into a concrete, exportable matrix.
+4. **State Hydration**: The final assembled JSON and parsed markdown are streamed back to the Client `Zustand` store, triggering the Framer Motion UI renders for the glassmorphic cards.
 
 ---
 
